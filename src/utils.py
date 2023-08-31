@@ -1,6 +1,9 @@
+import math
+
 import requests
 
 REQUEST_API_URL = "https://search-maps.yandex.ru/v1/"
+
 
 def search_on_maps(
     apikey: str,
@@ -14,7 +17,7 @@ def search_on_maps(
 ):
     result = requests.get(
         url=REQUEST_API_URL,
-        params={
+        params={  # type: ignore[arg-type]
             "lang": lang,
             "type": type_,
             "results": results,
@@ -22,11 +25,17 @@ def search_on_maps(
             "text": query,
             "skip": skip,
             "ll": ",".join(map(str, ll)),
-            "spn": ",".join(map(str, spn,)),
+            "spn": ",".join(
+                map(
+                    str,
+                    spn,
+                )
+            ),
         },
     )
     return result
 
+
 def km_to_ll(km: float) -> float:
     """Transfer kilometers to radian coords"""
-    pass
+    return km * 180 / math.pi / 6371
