@@ -1,0 +1,6 @@
+mypy==1.5.1
+types-requests==2.31.0.2
+types-urllib3==1.26.25.14
+black==23.7.0
+flake8==6.1.0
+bandit==1.7.5
