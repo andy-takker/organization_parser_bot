@@ -1,35 +1,54 @@
 import math
-from dataclasses import dataclass
 from typing import Any, Literal
 
 import requests
 
+from .dto import Company
+
+QueryType = Literal["biz", "geo"]
+
 REQUEST_API_URL = "https://search-maps.yandex.ru/v1/"
 
 
-@dataclass(frozen=True)
-class Company:
-    name: str
-    address: str
-    url: str | None = None
-
-    def __eq__(self, other):
-        return (
-            self.name == other.name
-            and self.address == other.address
-            and self.url == other.url
+def get_all_results(
+    apikey: str, query: str, ll: tuple[float, float], radius: float
+) -> set[Company]:
+    r = km_to_ll(radius)
+    spn = (r, r)
+    skip = 0
+    total_companies = set()
+    while True:
+        result = search_on_maps(
+            apikey=apikey,
+            query=query,
+            type_="biz",
+            ll=ll,
+            spn=spn,
+            skip=skip,
         )
+        if not result.ok:
+            break
+        data = result.json()
+        total_companies.update(parse_companies(data))
+        total = data["properties"]["ResponseMetaData"]["SearchResponse"]["found"]
+        print(total)
+        skip += len(data["features"])
+        if skip >= total:
+            break
+    return total_companies
 
 
-def km_to_ll(km: float) -> float:
-    """Transfer kilometers to radian coords"""
-    return km * 180 / math.pi / 6371
+def get_toponym_location(apikey: str, query: str) -> tuple[float, ...]:
+    result = search_on_maps(apikey=apikey, query=query, type_="geo")
+    if not result.ok:
+        raise ValueError(f"Result is not OK. Get status code - {result.status_code}")
+    return tuple(map(float, result.json()["features"][0]["geometry"]["coordinates"]))
 
 
 def search_on_maps(
     apikey: str,
     query: str,
-    type_: Literal["biz", "geo"],
+    type_: QueryType,
     ll: tuple[float, float] | None = None,
     spn: tuple[float, float] | None = None,
     skip: int = 0,
@@ -67,29 +86,6 @@ def parse_companies(data: dict[str, Any]) -> list[Company]:
     return companies
 
 
-def get_all_results(
-    apikey: str, query: str, ll: tuple[float, float], radius: float
-) -> set[Company]:
-    r = km_to_ll(radius)
-    spn = (r, r)
-    skip = 0
-    total_companies = set()
-    while True:
-        result = search_on_maps(
-            apikey=apikey,
-            query=query,
-            type_="biz",
-            ll=ll,
-            spn=spn,
-            skip=skip,
-        )
-        if not result.ok:
-            break
-        data = result.json()
-        total_companies.update(parse_companies(data))
-        total = data["properties"]["ResponseMetaData"]["SearchResponse"]["found"]
-        print(total)
-        skip += len(data["features"])
-        if skip >= total:
-            break
-    return total_companies
+def km_to_ll(km: float) -> float:
+    """Transfer kilometers to radian coords"""
+    return km * 180 / math.pi / 6371
