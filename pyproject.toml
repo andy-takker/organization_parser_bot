@@ -2,7 +2,7 @@
 name = "organization-parser"
 version = "0.2.0"
 description = "Bot for parser organizations from Yandex API"
-authors = ["Sergey Natalenko <sergey.natalenko@mail.ru>"]
+authors = ["Sergey Natalenko <sergey.natalenko@mail.ru>", "Konstantin Konoplya <konoplia00@mail.ru>"]
 license = "MIT"
 readme = "README.md"
 
