@@ -1,4 +1,6 @@
 from dataclasses import dataclass
+from typing import Any
+from uuid import UUID
 
 
 @dataclass(frozen=True)
@@ -9,7 +11,7 @@ class Company:
     email: str | None = None
     phone: str | None = None
 
-    def __eq__(self, other):
+    def __eq__(self, other: Any) -> bool:
         return (
             self.__class__.__name__ == other.__class__.__name__
             and self.name == other.name
@@ -30,3 +32,18 @@ class Company:
             email=self.email,
             phone=self.phone,
         )
+
+    def to_row(self) -> list[str | None]:
+        return [
+            self.name,
+            self.address,
+            self.email,
+            self.phone,
+            self.url,
+        ]
+
+
+@dataclass
+class UserDTO:
+    id: int
+    api_key: None | UUID = None
