@@ -26,9 +26,10 @@ Main technologies:
 - [poetry](https://python-poetry.org/)
 - [aiogram 3.0](https://docs.aiogram.dev/en/v3.0.0/)
 - [aiogram_dialog 2.0](https://aiogram-dialog.readthedocs.io/en/2.0.0/)
+- [httpx](https://www.python-httpx.org/) and [Beautiful Soup](https://www.crummy.com/software/BeautifulSoup/)
 - [sqlalchemy 2.0](https://docs.sqlalchemy.org/en/20/)
 - [alembic](https://alembic.sqlalchemy.org/en/latest/)
-- [aiosqlite](tps://aiosqlite.omnilib.dev/en/stable/)
+- [aiosqlite](https://aiosqlite.omnilib.dev/en/stable/)
 - [docker](https://www.docker.com/)
 
 ## Demo
@@ -102,7 +103,7 @@ alembic -c ./src/alembic.ini upgrade head
 ## Using
 
 1. At first, send `/start`
-2. For registration in bot you need set `Yandex API Key` to use the API. The key looks in the UUID format
+2. For registration in bot you need set `Yandex API Key` to use the API. The key looks in the UUID format. You can get key [here](https://yandex.ru/dev/maps/geosearch/?from=mapsapi)
 3. After that you can make requests:
 
    - set place where need search
