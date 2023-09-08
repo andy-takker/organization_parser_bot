@@ -1,4 +1,7 @@
+name: Make release
+
 on:
+  workflow_dispatch:
   pull_request: 
     branches:
       - master
@@ -6,7 +9,7 @@ on:
 jobs:
   checking:
     name: Check repository
-    uses: ./main.yml
+    uses: ./.github/workflows/main.yml
 
   build_and_push_docker:
     needs: checking
