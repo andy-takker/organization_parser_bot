@@ -12,6 +12,7 @@ jobs:
     uses: ./.github/workflows/main.yml
 
   build_and_push_docker:
+    name: Build and push AMD64 and ARM64 images
     needs: checking
     runs-on: ubuntu-latest
     steps:
