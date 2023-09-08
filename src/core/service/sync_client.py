@@ -1,28 +1,12 @@
-import csv
 import logging
-import math
-from pathlib import Path
-from typing import Any, Literal
 
 import requests
 
-from .dto import Company
+from src.core.dto import Company
+from src.core.service import REQUEST_API_URL, QueryType
+from src.core.service.utils import km_to_ll, parse_companies
 
 logger = logging.getLogger(__name__)
-
-QueryType = Literal["biz", "geo"]
-
-REQUEST_API_URL = "https://search-maps.yandex.ru/v1/"
-
-
-def save_companies_to_csv_file(companies: list[Company], output_filename: Path) -> None:
-    with open(output_filename, "w+") as f:
-        writer = csv.DictWriter(
-            f, fieldnames=["name", "address", "email", "phone", "url"]
-        )
-        writer.writeheader()
-        writer.writerows(map(lambda c: c.to_dict(), companies))
-    logger.info("Companies was written into %s", output_filename)
 
 
 def get_companies_dump(
@@ -109,21 +93,3 @@ def search_on_maps(
         params=params,
     )
     return result
-
-
-def parse_companies(data: dict[str, Any]) -> list[Company]:
-    companies = []
-    for feature in data["features"]:
-        companies.append(
-            Company(
-                name=feature["properties"]["CompanyMetaData"]["name"],
-                address=feature["properties"]["CompanyMetaData"]["address"],
-                url=feature["properties"]["CompanyMetaData"].get("url"),
-            )
-        )
-    return companies
-
-
-def km_to_ll(km: float) -> float:
-    """Transfer kilometers to radian coords"""
-    return km * 180 / math.pi / 6371

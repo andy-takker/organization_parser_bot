@@ -5,7 +5,8 @@ from typing import Annotated
 
 import typer
 
-from .utils import get_companies_dump, save_companies_to_csv_file
+from src.core.service.sync_client import get_companies_dump
+from src.core.service.utils import save_companies_to_csv_file
 
 DEFAULT_RADIUS_KM = 10
 
@@ -43,7 +44,3 @@ def cli(
     )
     save_companies_to_csv_file(companies=companies, output_filename=output_filename)
     logger.info("Successful found: total %d companies", len(companies))
-
-
-def main():
-    typer.run(cli)
