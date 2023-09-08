@@ -19,6 +19,7 @@ alembic = "^1.12.0"
 httpx = "^0.24.1"
 pandas = "^2.1.0"
 xlsxwriter = "^3.1.2"
+lxml = "^4.9.3"
 
 [tool.poetry.group.dev.dependencies]
 pre-commit = "^3.4.0"
@@ -27,6 +28,7 @@ types-requests = "^2.31.0.2"
 black = "^23.7.0"
 bandit = "^1.7.5"
 pandas-stubs = "^2.0.3.230814"
+types-beautifulsoup4 = "^4.12.0.6"
 
 [build-system]
 requires = ["poetry-core"]

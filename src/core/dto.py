@@ -33,8 +33,14 @@ class Company:
             phone=self.phone,
         )
 
-    def to_row(self) -> list[str | None]:
-        return [self.name, self.address, self.phone, self.url, self.email]
+    def to_row(self) -> list[str]:
+        return [
+            self.name,
+            self.address,
+            self.phone or "",
+            self.url or "",
+            self.email or "",
+        ]
 
     @staticmethod
     def header() -> list[str]:
