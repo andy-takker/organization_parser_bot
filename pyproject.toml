@@ -1,0 +1,51 @@
+[tool.poetry]
+name = "organization-parser"
+version = "0.2.0"
+description = "Bot for parser organizations from Yandex API"
+authors = ["Sergey Natalenko <sergey.natalenko@mail.ru>", "Konstantin Konoplya <konoplia00@mail.ru>"]
+license = "MIT"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+typer = {extras = ["all"], version = "^0.9.0"}
+requests = "^2.31.0"
+aiogram = "^3.0.0"
+aiogram-dialog = "^2.0.0"
+pydantic-settings = "^2.0.3"
+aiosqlite = "^0.19.0"
+SQLAlchemy = "^2.0.20"
+alembic = "^1.12.0"
+httpx = "^0.24.1"
+pandas = "^2.1.0"
+xlsxwriter = "^3.1.2"
+lxml = "^4.9.3"
+
+[tool.poetry.group.dev.dependencies]
+pre-commit = "^3.4.0"
+mypy = "^1.5.1"
+types-requests = "^2.31.0.2"
+black = "^23.7.0"
+bandit = "^1.7.5"
+pandas-stubs = "^2.0.3.230814"
+types-beautifulsoup4 = "^4.12.0.6"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.black]
+target-version = ["py311"]
+
+[tool.isort]
+known_local_folder = "src"
+py_version = "311"
+profile = "black"
+
+[tool.mypy]
+plugins = ["pydantic.mypy", "sqlalchemy.ext.mypy.plugin"]
+check_untyped_defs = true
+disallow_incomplete_defs = true
+disallow_untyped_defs = true
+ignore_missing_imports = false
+no_implicit_optional = true
