@@ -9,7 +9,7 @@ from aiogram_dialog.widgets.text import Const, Format
 
 from src.bot.db.provider import DatabaseProvider
 from src.core.service.async_client import async_get_companies_dump
-from src.core.service.utils import save_companies_to_buffered_csv_file
+from src.core.service.utils import save_companies_to_buffered_excel_file
 
 
 class ConfirmWindow(Window):
@@ -46,9 +46,9 @@ async def make_search_request(
     )
     manager.show_mode = ShowMode.SEND
     if companies:
-        csv_file = save_companies_to_buffered_csv_file(companies)
+        excel_file = save_companies_to_buffered_excel_file(companies)
         await c.bot.send_document(
-            document=BufferedInputFile(file=csv_file, filename="report.csv"),
+            document=BufferedInputFile(file=excel_file, filename="report.xlsx"),
             chat_id=c.from_user.id,
         )
     elif companies is None:

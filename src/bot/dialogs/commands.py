@@ -19,7 +19,7 @@ async def start_command(
         await message.answer(
             "Добро пожаловать! Чтобы начать делать выгрузки "
             "нужно зарегистрировать новый "
-            '<a href="https://developer.tech.yandex.ru/services/12">ключ</a>'
+            '<a href="https://yandex.com/dev/maps/geosearch/">API ключ</a>'
         )
         await dialog_manager.start(
             RegistrationSG.set_api_key,

@@ -34,13 +34,11 @@ class Company:
         )
 
     def to_row(self) -> list[str | None]:
-        return [
-            self.name,
-            self.address,
-            self.email,
-            self.phone,
-            self.url,
-        ]
+        return [self.name, self.address, self.phone, self.url, self.email]
+
+    @staticmethod
+    def header() -> list[str]:
+        return ["name", "address", "phone", "url", "email"]
 
 
 @dataclass

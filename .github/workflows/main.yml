@@ -1,6 +1,10 @@
-name: Main action
+name: Check project in all branches
 
-on: [push]
+on:
+  workflow_call:
+  push:
+    branches-ignore: 
+      - master
 
 jobs:
   checking:

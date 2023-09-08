@@ -6,6 +6,8 @@ import uuid
 from pathlib import Path
 from typing import Any
 
+import pandas as pd
+
 from src.core.dto import Company
 
 logger = logging.getLogger(__name__)
@@ -13,20 +15,19 @@ logger = logging.getLogger(__name__)
 
 def save_companies_to_csv_file(companies: list[Company], output_filename: Path) -> None:
     with open(output_filename, "w+") as f:
-        writer = csv.DictWriter(
-            f, fieldnames=["name", "address", "email", "phone", "url"]
-        )
+        writer = csv.DictWriter(f, fieldnames=Company.header())
         writer.writeheader()
         writer.writerows(map(lambda c: c.to_dict(), companies))
     logger.info("Companies was written into %s", output_filename)
 
 
-def save_companies_to_buffered_csv_file(companies: list[Company]) -> bytes:
-    output = io.StringIO()
-    writer = csv.writer(output, quoting=csv.QUOTE_NONNUMERIC)
-    writer.writerow(["name", "address", "email", "phone", "url"])
-    writer.writerows(map(lambda c: c.to_row(), companies))
-    return output.getvalue().encode()
+def save_companies_to_buffered_excel_file(companies: list[Company]) -> bytes:
+    output = io.BytesIO()
+    data = [c.to_row() for c in companies]
+    df = pd.DataFrame(data=data, columns=Company.header())
+    with pd.ExcelWriter(output, engine="xlsxwriter") as writer:
+        df.to_excel(writer, sheet_name="companies", index=False)
+    return output.getvalue()
 
 
 def parse_companies(data: dict[str, Any]) -> list[Company]:
