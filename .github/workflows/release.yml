@@ -36,4 +36,4 @@ jobs:
         with:
           push: true
           platforms: linux/amd64,linux/arm64
-          tags: andy-takker/organization_parser:latest
+          tags: andytakker/organization_parser:latest
