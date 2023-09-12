@@ -131,7 +131,7 @@ async def preprocessed_companies(
 async def parse_email(company_id: int, url: str | None) -> tuple[int, str]:
     if url is None:
         return company_id, ""
-    async with AsyncClient() as client:
+    async with AsyncClient(follow_redirects=True) as client:
         try:
             result = await client.get(url or "")
             return company_id, find_emails(result.text)
