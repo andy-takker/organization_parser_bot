@@ -15,7 +15,7 @@ from src.core.dto import Company
 
 logger = logging.getLogger(__name__)
 
-PATTERN_EMAIL = re.compile(r"[\w.+-]+[\@|\(at\)][\w-]+\.[\w.-]+")
+PATTERN_EMAIL = re.compile(r"[\w.+-]+(?:@|\(at\))[\w-]+\.[\w.-]+")
 
 
 def save_companies_to_csv_file(companies: list[Company], output_filename: Path) -> None:
