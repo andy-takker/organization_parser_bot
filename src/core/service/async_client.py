@@ -1,14 +1,12 @@
 import asyncio
-import logging
 from ssl import SSLError
 
 from httpx import AsyncClient, HTTPError, Response
+from loguru import logger
 
 from src.core.dto import Company
 from src.core.service import REQUEST_API_URL, QueryType
 from src.core.service.utils import find_emails, km_to_ll, parse_companies
-
-logger = logging.getLogger(__name__)
 
 
 async def async_search_on_maps(
@@ -135,5 +133,6 @@ async def parse_email(company_id: int, url: str | None) -> tuple[int, str]:
         try:
             result = await client.get(url or "")
             return company_id, find_emails(result.text)
-        except (HTTPError, SSLError):
+        except (HTTPError, SSLError) as e:
+            logger.exception("Occurred exception: {e}", e=e)
             return company_id, ""
