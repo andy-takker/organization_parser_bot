@@ -129,10 +129,12 @@ async def preprocessed_companies(
 
 
 async def parse_email(company_id: int, url: str | None) -> tuple[int, str]:
+    if url is None:
+        return company_id, ""
     async with AsyncClient() as client:
         try:
             result = await client.get(url or "")
             return company_id, find_emails(result.text)
         except (HTTPError, SSLError) as e:
-            logger.exception("Occurred exception: {e}", e=e)
+            logger.exception("Occurred exception with url={url}: {e}", url=url, e=e)
             return company_id, ""
