@@ -16,4 +16,4 @@ COPY ./src/ /bot/src
 
 RUN  alembic -c src/alembic.ini upgrade head                                                          
 
-CMD [ "python", "./src/bot/main.py" ]
+CMD [ "python", "./src/bot/cli.py" ]
