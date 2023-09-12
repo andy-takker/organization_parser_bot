@@ -1,7 +1,13 @@
 import asyncio
-from ssl import SSLError
 
-from httpx import AsyncClient, HTTPError, Response
+from httpx import (
+    AsyncClient,
+    ConnectError,
+    ConnectTimeout,
+    HTTPError,
+    ReadError,
+    Response,
+)
 from loguru import logger
 
 from src.core.dto import Company
@@ -107,9 +113,9 @@ async def fast(
     )
     if result.status_code >= 300:
         logger.error(
-            "Occurred error. Status code: %d. message: `%s`",
-            result.status_code,
-            result.json()["message"],
+            "Occurred error. Status code = {code}. message = {message}",
+            code=result.status_code,
+            message=result.json()["message"],
         )
         return []
     return parse_companies(result.json())
@@ -118,23 +124,38 @@ async def fast(
 async def preprocessed_companies(
     companies: set[Company],
 ) -> list[list[str]]:
-    preprocessed_companies = {}
-    tasks = []
-    for i, company in enumerate(companies):
-        preprocessed_companies[i] = company.to_row()
-        tasks.append(parse_email(i, company.url))
-    for i, email in await asyncio.gather(*tasks):
-        preprocessed_companies[i][-1] = email
-    return list(preprocessed_companies.values())
+    preprocessed_companies = []
+    for company in companies:
+        preprocessed_companies.append(company.to_row())
+        preprocessed_companies[-1][-1] = await parse_email(company.url)
+    return preprocessed_companies
 
 
-async def parse_email(company_id: int, url: str | None) -> tuple[int, str]:
+async def parse_email(url: str | None) -> str:
     if url is None:
-        return company_id, ""
-    async with AsyncClient(follow_redirects=True) as client:
+        return ""
+    async with AsyncClient(
+        follow_redirects=True, verify=False, timeout=10
+    ) as client:  # nosec
         try:
-            result = await client.get(url or "")
-            return company_id, find_emails(result.text)
-        except (HTTPError, SSLError) as e:
-            logger.exception("Occurred exception with url={url}: {e}", url=url, e=e)
-            return company_id, ""
+            result = await client.get(url)
+            return find_emails(result.text)
+        except ConnectTimeout:
+            logger.info("Occured timeout exception with url={url}", url=url)
+        except ConnectError as e:
+            logger.info(
+                "Occurec connect error with url={url}, message={message}",
+                url=url,
+                message=e,
+            )
+        except ReadError as e:
+            logger.info(
+                "Occured read error with url={url}, message={message}",
+                url=url,
+                message=e,
+            )
+        except HTTPError:
+            logger.exception("Occurred exception with url={url}", url=url)
+        except Exception:
+            pass
+    return ""

@@ -5,6 +5,7 @@ from aiogram.enums import ParseMode
 from aiogram.fsm.storage.base import BaseStorage
 from aiogram.fsm.storage.memory import MemoryStorage
 from aiogram_dialog import setup_dialogs
+from loguru import logger
 
 from src.bot.config import Settings
 from src.bot.db.factory import create_engine, create_session_factory
@@ -13,11 +14,10 @@ from src.bot.middlewares.db import DatabaseMiddleware
 from src.bot.middlewares.settings import SettingsMiddleware
 from src.bot.ui_commands import set_ui_commands
 
-logger = logging.getLogger(__name__)
-
 
 async def main() -> None:
     logging.basicConfig(level=logging.INFO)
+    logger.add("bot.log", rotation="1 days", diagnose=False, backtrace=False)
 
     settings = Settings()
     if settings.TELEGRAM_BOT_TOKEN.get_secret_value() == "default":

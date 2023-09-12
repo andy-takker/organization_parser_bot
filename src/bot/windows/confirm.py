@@ -1,5 +1,4 @@
 import asyncio
-import logging
 from textwrap import dedent
 from typing import Any
 
@@ -9,12 +8,11 @@ from aiogram.types import BufferedInputFile, CallbackQuery
 from aiogram_dialog import DialogManager, ShowMode, Window
 from aiogram_dialog.widgets.kbd import Back, Button
 from aiogram_dialog.widgets.text import Const, Format
+from loguru import logger
 
 from src.bot.db.provider import DatabaseProvider
 from src.core.service.async_client import async_get_companies_dump
 from src.core.service.utils import save_companies_to_buffered_excel_file
-
-logger = logging.getLogger(__name__)
 
 
 class ConfirmWindow(Window):
