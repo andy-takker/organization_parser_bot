@@ -1,0 +1,14 @@
+version: '3.8'
+services:
+  bot:
+    image: andytakker/organization_parser:latest
+    restart: unless-stopped
+    environment:
+      TELEGRAM_BOT_TOKEN: ${TELEGRAM_BOT_TOKEN}
+      SQLITE_DB_PATH: ${SQLITE_DB_PATH}
+    volumes:
+      - db_data:${SQLITE_DB_PATH}
+  
+volumes:
+  db_data:
+    driver: local
