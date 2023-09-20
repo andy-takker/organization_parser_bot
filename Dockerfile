@@ -1,19 +1,15 @@
 FROM python:3.11-slim
-RUN pip install --no-cache-dir poetry && poetry config virtualenvs.create false
+RUN pip install -U --no-cache-dir poetry pip && poetry config virtualenvs.create false
 
 WORKDIR /bot
 
 COPY ./pyproject.toml ./poetry.lock /bot/
-
-RUN poetry export -f requirements.txt --output /bot/requirements.txt \
-    --without-hashes --without-urls \
-    && pip install -r /bot/requirements.txt
-
+RUN poetry install --no-interaction --no-ansi --no-root --without dev
 
 ENV PYTHONPATH=/bot/
 
 COPY ./src/ /bot/src
 
-RUN  alembic -c src/alembic.ini upgrade head                                                          
+RUN chmod +x ./src/start.sh                                                      
 
-CMD [ "python", "./src/bot/cli.py" ]
+ENTRYPOINT [ "/bot/src/start.sh" ]
